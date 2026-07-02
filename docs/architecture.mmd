@@ -1,0 +1,60 @@
+flowchart LR
+    subgraph T1["Tier 1 — Presentation Layer"]
+        direction TB
+        FE["Frontend Stack\nMantine UI\nFabric.js Canvas\nReact.js + TypeScript\nTanStack Query"]
+        AUTH["Auth & Role Context"]
+    end
+
+    subgraph T2["Tier 2 — Application Logic"]
+        direction TB
+        subgraph EF1["Supabase Edge Functions\nInvoke + JWT"]
+            direction TB
+            GEN["generate-image\ngenerate-caption\nsummarize-analytics"]
+            EMAIL_FN["send-email"]
+            SOCIAL["send-social\nFeed Posts"]
+            CHAT["send-chat-message\nInbox DM Reply"]
+            WA_FN["send-whatsapp"]
+            OAUTH_FN["meta-oauth\nOAuth Token Exchange"]
+        end
+        subgraph EF2["Supabase Edge Functions\nWebhook — No JWT"]
+            direction TB
+            WA_HOOK["whatsapp-webhook"]
+            META_HOOK["meta-webhook"]
+        end
+        SUPA_AUTH["Supabase Auth"]
+    end
+
+    subgraph EXT["External Services"]
+        direction TB
+        OPENAI["OpenAI API\nDALL-E 3 / GPT-4o"]
+        RESEND["Resend API\nEmail"]
+        META_GRAPH["META Graph API\nInstagram / Facebook"]
+        META_WA["META WhatsApp\nCloud API"]
+    end
+
+    subgraph T3["Tier 3 — Data Layer"]
+        direction TB
+        DB[("PostgreSQL + RLS")]
+        STORAGE[("Object Storage")]
+    end
+
+    FE -->|"Invoke + JWT"| EF1
+    AUTH -->|"Login / Session"| SUPA_AUTH
+    SUPA_AUTH -->|"Validates identity"| DB
+
+    GEN -->|"API Call"| OPENAI
+    EMAIL_FN -->|"Send API"| RESEND
+    SOCIAL -->|"Send API"| META_GRAPH
+    CHAT -->|"Send API"| META_GRAPH
+    CHAT -->|"Send API"| META_WA
+    WA_FN -->|"Send API"| META_WA
+    OAUTH_FN -->|"Save Token"| DB
+    EF1 -->|"Read / Write"| DB
+
+    META_WA -->|"POST Webhook\nNo JWT"| WA_HOOK
+    META_GRAPH -->|"POST Webhook\nNo JWT"| META_HOOK
+    WA_HOOK -->|"Upsert"| DB
+    META_HOOK -->|"Upsert"| DB
+
+    DB -->|"Realtime Subscription"| FE
+    FE -->|"Upload Media\nREST + JWT"| STORAGE

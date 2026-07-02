@@ -1,0 +1,88 @@
+# ===========================
+# Dependencies
+# ===========================
+node_modules
+.pnp
+.pnp.js
+
+# ===========================
+# Build output
+# ===========================
+dist
+dist-ssr
+build
+.output
+
+# ===========================
+# Environment & Secrets — JANGAN PERNAH DICOMMIT
+# ===========================
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.staging
+*.env
+
+# Supabase secrets & temp
+supabase/.temp/
+supabase/functions/.env
+supabase/functions/**/.env
+supabase/secrets.toml
+.supabase/
+
+# ===========================
+# Logs
+# ===========================
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ===========================
+# OS files
+# ===========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ===========================
+# Editor
+# ===========================
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+
+# ===========================
+# TypeScript
+# ===========================
+*.tsbuildinfo
+
+# ===========================
+# Testing
+# ===========================
+coverage
+.nyc_output
+
+# ===========================
+# Misc
+# ===========================
+*.local
+*.pem
+*.key
+*.cert
