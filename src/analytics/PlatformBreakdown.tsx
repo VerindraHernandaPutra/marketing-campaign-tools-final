@@ -44,7 +44,7 @@ const PlatformBreakdown: React.FC<PlatformBreakdownProps> = ({ data }) => {
             ))}
           </Pie>
           <Tooltip
-            formatter={(value: number, name: string) => [`${value} (${Math.round((value / total) * 100)}%)`, name]}
+            formatter={(value, name) => [`${Number(value)} (${Math.round((Number(value) / total) * 100)}%)`, name]}
             contentStyle={{ borderRadius: 8, border: '1px solid var(--mantine-color-gray-2)', fontSize: 12 }}
           />
         </PieChart>

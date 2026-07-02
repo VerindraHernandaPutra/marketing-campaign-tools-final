@@ -172,7 +172,7 @@ const MetaSocialPerformance: React.FC<Props> = ({ campaigns, socialMeta, loading
                 <Cell fill="#E4405F" strokeWidth={0} />
               </Pie>
               <Tooltip
-                formatter={(value: number, name: string) => [value, name]}
+                formatter={(value, name) => [value, name]}
                 contentStyle={{ borderRadius: 8, fontSize: 12 }}
               />
             </PieChart>

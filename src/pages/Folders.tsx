@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Container, Title, Box, Group, Button, TextInput, Paper,
+  Container, Title, Group, Button, TextInput, Paper,
   Text, ActionIcon, Menu, Modal, SimpleGrid, Badge
 } from '@mantine/core';
 import { SearchIcon, FolderIcon, MoreVerticalIcon, EditIcon, TrashIcon, FolderPlusIcon } from 'lucide-react';

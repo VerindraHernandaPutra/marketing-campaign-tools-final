@@ -17,7 +17,7 @@ interface Integration {
 
 const IntegrationsInstagram = () => {
   const { currentOrgId } = useUserRole();
-  const { metaAppId, setMetaAppId, savedAppId, saving, saveAppId } = useMetaAppId();
+  const { metaAppId, setMetaAppId, metaAppSecret, savedAppId, saving, saveAppId } = useMetaAppId();
   const { handleConnectFacebook } = useMetaAuth('instagram', savedAppId);
   const [integrations, setIntegrations] = useState<Integration[]>([]);
   const [loading, setLoading] = useState(false);
@@ -125,7 +125,7 @@ const IntegrationsInstagram = () => {
                     loading={saving}
                     disabled={!metaAppId.trim()}
                     onClick={async () => {
-                      const ok = await saveAppId(metaAppId);
+                      const ok = await saveAppId(metaAppId, metaAppSecret);
                       if (ok) setEditingAppId(false);
                     }}
                   >

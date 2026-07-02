@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Paper, Text, TextInput, Group, Box, Divider, Badge, Loader, Avatar, Alert, Stack,
+  Paper, Text, TextInput, Group, Box, Divider, Badge, Loader, Avatar, Alert,
 } from '@mantine/core';
 import { MailIcon } from 'lucide-react';
 import { supabase } from '../../supabaseClient';

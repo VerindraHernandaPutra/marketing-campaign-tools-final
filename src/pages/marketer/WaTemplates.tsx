@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Box, Button, Group, Text, Paper, Badge, Table, ActionIcon,
-  TextInput, Textarea, Select, Stack, Modal, Loader, Alert,
+  TextInput, Textarea, Select, Stack, Modal, Alert,
   SimpleGrid, ThemeIcon, FileInput, Image, Drawer, Pagination,
   Divider, LoadingOverlay, Code,
 } from '@mantine/core';

@@ -8,8 +8,8 @@ import {
 } from '@mantine/core';
 import type { MantineTheme } from '@mantine/core';
 import {
-  ImageIcon, TypeIcon, SquareIcon, CircleIcon, TriangleIcon, FileTextIcon,
-  BoxIcon, HexagonIcon, MinusIcon, BaselineIcon, SparklesIcon,
+  ImageIcon, TypeIcon, SquareIcon, CircleIcon, TriangleIcon,
+  BoxIcon, HexagonIcon, MinusIcon, SparklesIcon,
   Settings2Icon, PaletteIcon, SunIcon, MaximizeIcon,
   MessageSquareIcon, ArrowRightIcon, PaintbrushIcon,
   EyeIcon, UploadIcon, RefreshCw, LayersIcon, TrashIcon, EyeOffIcon, LockIcon, UnlockIcon,

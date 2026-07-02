@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
   HomeIcon, LayoutIcon, ImageIcon, SendIcon, BarChartIcon,
   UsersIcon, LayersIcon, ShieldIcon, MegaphoneIcon,
-  MessageCircleIcon, InstagramIcon, MessagesSquareIcon, MessageSquareIcon,
+  MessageCircleIcon, InstagramIcon, MessageSquareIcon,
   BuildingIcon, PaletteIcon, RadioTowerIcon, MailIcon
 } from 'lucide-react';
 import { useUserRole } from '../auth/UserContext';

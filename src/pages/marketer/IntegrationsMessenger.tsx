@@ -20,7 +20,7 @@ interface Integration {
 
 const IntegrationsMessenger = () => {
   const { currentOrgId } = useUserRole();
-  const { metaAppId, setMetaAppId, savedAppId, saving, saveAppId } = useMetaAppId();
+  const { metaAppId, setMetaAppId, metaAppSecret, savedAppId, saving, saveAppId } = useMetaAppId();
   const { handleConnectFacebook } = useMetaAuth('messenger', savedAppId);
   const [integrations, setIntegrations] = useState<Integration[]>([]);
   const [loading, setLoading] = useState(false);
@@ -119,7 +119,7 @@ const IntegrationsMessenger = () => {
                 loading={saving}
                 disabled={!metaAppId.trim()}
                 onClick={async () => {
-                  const ok = await saveAppId(metaAppId);
+                  const ok = await saveAppId(metaAppId, metaAppSecret);
                   if (ok) setEditingAppId(false);
                 }}
               >

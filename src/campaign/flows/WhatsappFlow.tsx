@@ -72,7 +72,7 @@ const NumberedCircle: React.FC<{ n: number }> = ({ n }) => (
 );
 
 const WhatsappFlow: React.FC<WhatsappFlowProps> = ({
-  data, onChange, title = '', content = '', previewMediaUrls = [],
+  data, onChange, title = '', content: _content = '', previewMediaUrls = [],
 }) => {
   const { currentOrgId } = useUserRole();
   const navigate = useNavigate();
