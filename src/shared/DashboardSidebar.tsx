@@ -123,26 +123,23 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ collapsed = false }
         flexShrink: 0, height: '100vh',
         transition: 'width 0.22s cubic-bezier(0.4,0,0.2,1)',
         overflow: 'hidden', backgroundColor: 'white',
+        display: 'flex', flexDirection: 'column',
       }}>
-        <ScrollArea h="100%" scrollbarSize={4}>
+        <ScrollArea style={{ flex: 1 }} scrollbarSize={4}>
           <Box px={collapsed ? 6 : 10} pt={10} pb={8}
             style={{ borderBottom: '1px solid var(--mantine-color-gray-1)' }}>
             {collapsed ? (
-              <Tooltip label="Marketing Platform · Super Admin" position="right" withArrow>
+              <Tooltip label="Markivo · Super Admin" position="right" withArrow>
                 <Box style={{ display: 'flex', justifyContent: 'center' }}>
-                  <Avatar size={30} radius="md" variant="light" style={{ background: '#ef444418', color: '#ef4444' }}>
-                    <ShieldIcon size={15} />
-                  </Avatar>
+                  <img src="/Logo.png" alt="Markivo" style={{ width: 30, height: 30, borderRadius: 6, objectFit: 'cover' }} />
                 </Box>
               </Tooltip>
             ) : (
               <Box>
                 <Box style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                  <Avatar size={28} radius="md" variant="light" style={{ background: '#ef444418', color: '#ef4444' }}>
-                    <ShieldIcon size={15} />
-                  </Avatar>
+                  <img src="/Logo.png" alt="Markivo" style={{ width: 28, height: 28, borderRadius: 6, objectFit: 'cover', flexShrink: 0 }} />
                   <Box style={{ overflow: 'hidden', flex: 1 }}>
-                    <Text size="xs" fw={500} truncate style={{ lineHeight: 1.3, fontSize: '0.78rem' }}>Marketing Platform</Text>
+                    <Text size="xs" fw={500} truncate style={{ lineHeight: 1.3, fontSize: '0.78rem' }}>Markivo</Text>
                     <Text size="xs" c="dimmed" truncate style={{ fontSize: '0.64rem', lineHeight: 1.2 }}>System Administration</Text>
                   </Box>
                 </Box>
@@ -164,6 +161,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ collapsed = false }
               active={isActive('/admin', true)} onClick={() => navigate('/admin')} collapsed={collapsed} />
           </Box>
         </ScrollArea>
+
       </Box>
     );
   }
@@ -174,8 +172,9 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ collapsed = false }
       flexShrink: 0, height: '100vh',
       transition: 'width 0.22s cubic-bezier(0.4,0,0.2,1)',
       overflow: 'hidden', backgroundColor: 'white',
+      display: 'flex', flexDirection: 'column',
     }}>
-      <ScrollArea h="100%" scrollbarSize={4}>
+      <ScrollArea style={{ flex: 1 }} scrollbarSize={4}>
 
         {/* Org Branding */}
         <Box px={collapsed ? 6 : 10} pt={10} pb={8}
@@ -183,7 +182,8 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ collapsed = false }
           {collapsed ? (
             <Tooltip label={`${displayName} · ${roleLabel}`} position="right" withArrow>
               <Box style={{ display: 'flex', justifyContent: 'center' }}>
-                <Avatar size={30} radius="md" variant="light" style={{ color: roleColor }}>
+                <img src="/Logo.png" alt="Markivo" style={{ width: 30, height: 30, borderRadius: 6, objectFit: 'cover' }} />
+                <Avatar size={30} radius="md" variant="light" style={{ color: roleColor, display: 'none' }}>
                   {roleIconLg}
                 </Avatar>
               </Box>
@@ -191,9 +191,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ collapsed = false }
           ) : (
             <Box>
               <Box style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                <Avatar size={28} radius="md" variant="light" style={{ background: roleColor + '18', color: roleColor }}>
-                  {roleIconLg}
-                </Avatar>
+                <img src="/Logo.png" alt="Markivo" style={{ width: 28, height: 28, borderRadius: 6, objectFit: 'cover', flexShrink: 0 }} />
                 <Box style={{ overflow: 'hidden', flex: 1 }}>
                   <Text size="xs" fw={500} truncate style={{ lineHeight: 1.3, fontSize: '0.78rem' }}>{displayName}</Text>
                   <Text size="xs" c="dimmed" truncate style={{ fontSize: '0.64rem', lineHeight: 1.2 }}>Marketing Platform</Text>
@@ -257,6 +255,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ collapsed = false }
           )}
         </Box>
       </ScrollArea>
+
     </Box>
   );
 };

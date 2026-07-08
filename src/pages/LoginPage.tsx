@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
 import {
   Button, TextInput, PasswordInput, Paper, Title,
-  Text, Stack, Box, ThemeIcon, Divider,
+  Text, Stack, Box, Divider,
 } from '@mantine/core';
-import { Megaphone } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('admin@gmail.com');
@@ -48,17 +47,13 @@ export const LoginPage: React.FC = () => {
         position: 'relative', zIndex: 1,
       }}>
         <Stack align="center" gap="xs" mb="lg">
-          <ThemeIcon size={68} radius="xl" variant="gradient"
-            gradient={{ from: 'indigo', to: 'violet', deg: 135 }}
-            style={{ boxShadow: '0 8px 32px rgba(99,102,241,0.35)' }}>
-            <Megaphone size={32} />
-          </ThemeIcon>
+          <img src="/Logo.png" alt="Markivo" style={{ width: 72, height: 72, borderRadius: 16 }} />
           <Title order={1} ta="center" style={{
             background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
             fontSize: '26px', fontWeight: 800, letterSpacing: '-0.5px', marginTop: '4px',
           }}>
-            Marketing Campaign Platform
+            Markivo
           </Title>
           <Text size="sm" c="dimmed" ta="center" lh={1.4}>
             Integrated AI-Powered Marketing Campaign Management
