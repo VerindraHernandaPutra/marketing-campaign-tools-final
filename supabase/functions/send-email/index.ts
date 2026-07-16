@@ -33,7 +33,7 @@ serve(async (req: Request) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { to, subject, html, attachments, organizationId, campaignId, mediaUrls } = await req.json();
+    const { to, subject, html, scheduledAt, attachments, organizationId, campaignId, mediaUrls } = await req.json();
 
     console.log("send-email received:", { to, subject, hasAttachments: !!attachments?.length, organizationId, campaignId });
 
@@ -92,6 +92,10 @@ serve(async (req: Request) => {
       html: finalHtml,
     };
 
+    if (scheduledAt) {
+      payload.scheduled_at = scheduledAt;
+    }
+
     if (attachments && attachments.length > 0) {
       payload.attachments = attachments.map((att: any) => ({
         filename: att.filename.replace(/[^a-zA-Z0-9.-]/g, '_'),
@@ -99,16 +103,33 @@ serve(async (req: Request) => {
       }));
     }
 
-    const response = await fetch('https://api.resend.com/emails', {
+    const resendHeaders = {
+      'Authorization': `Bearer ${resendApiKey}`,
+      'Content-Type': 'application/json',
+    };
+
+    let response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${resendApiKey}`,
-        'Content-Type': 'application/json',
-      },
+      headers: resendHeaders,
       body: JSON.stringify(payload),
     });
 
-    const data = await response.json();
+    let data = await response.json();
+
+    // Jika Resend menolak scheduled_at (fitur paid plan), kirim langsung tanpa jadwal
+    if (!response.ok && payload.scheduled_at) {
+      const errMsg = (data?.message || data?.error || '').toLowerCase();
+      if (errMsg.includes('plan') || errMsg.includes('upgrade') || errMsg.includes('schedule') || errMsg.includes('paid')) {
+        console.warn('Resend rejected scheduled_at (requires paid plan), sending immediately instead...');
+        delete payload.scheduled_at;
+        response = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: resendHeaders,
+          body: JSON.stringify(payload),
+        });
+        data = await response.json();
+      }
+    }
 
     if (!response.ok) {
       console.error("Resend API Error:", data);
