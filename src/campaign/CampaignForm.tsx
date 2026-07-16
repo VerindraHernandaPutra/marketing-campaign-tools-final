@@ -326,7 +326,15 @@ const CampaignForm: React.FC = () => {
           campaignId: currentCampaignId,
         };
         const { data: resultData, error: invokeError } = await supabase.functions.invoke('send-email', { body: payload });
-        if (invokeError) throw new Error(`Edge Function Error: ${invokeError.message}`);
+        if (invokeError) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const body = (invokeError as any).context?.body;
+          let detail = invokeError.message;
+          if (body) {
+            try { detail = JSON.parse(body)?.error || detail; } catch { detail = body; }
+          }
+          throw new Error(detail);
+        }
         if (resultData?.error) throw new Error(resultData.error);
       }
     } catch (error: unknown) {

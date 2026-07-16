@@ -116,10 +116,6 @@ serve(async (req: Request) => {
       html: finalHtml,
     };
 
-    if (scheduledAt) {
-      payload.scheduled_at = scheduledAt;
-    }
-
     if (attachments && attachments.length > 0) {
       payload.attachments = attachments.map((att: any) => ({
         filename: att.filename.replace(/[^a-zA-Z0-9.-]/g, '_'),
