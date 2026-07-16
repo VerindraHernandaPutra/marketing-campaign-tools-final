@@ -41,7 +41,7 @@ serve(async (req: Request) => {
     );
     if (authError || !user) throw new Error("Unauthorized");
 
-    const { to, subject, html, scheduledAt, attachments, organizationId, campaignId } = await req.json();
+    const { to, subject, html, scheduledAt, attachments, organizationId, campaignId, mediaUrls } = await req.json();
 
     console.log("send-email received:", { to, subject, hasAttachments: !!attachments?.length, organizationId, campaignId });
 
@@ -95,23 +95,26 @@ serve(async (req: Request) => {
       throw new Error("No Resend API Key configured. Please connect Resend in Platform → Resend (Email) settings.");
     }
 
+    // Embed media images into HTML body if provided
+    let finalHtml = html;
+    if (mediaUrls && Array.isArray(mediaUrls) && mediaUrls.length > 0) {
+      const mediaImagesHtml = mediaUrls
+        .map((url: string) => `<div style="margin:16px 0;"><img src="${url}" alt="Campaign Image" style="max-width:100%;border-radius:8px;display:block;" /></div>`)
+        .join('');
+      // Insert images after the first <h2> tag if present, otherwise prepend
+      if (finalHtml.includes('<h2')) {
+        finalHtml = finalHtml.replace(/(<\/h2>)/, `$1${mediaImagesHtml}`);
+      } else {
+        finalHtml = mediaImagesHtml + finalHtml;
+      }
+    }
+
     const payload: EmailPayload = {
       from: fromAddress,
       to: Array.isArray(to) ? to : [to],
       subject,
-      html,
+      html: finalHtml,
     };
-
-    const resendTags: { name: string; value: string }[] = [];
-    if (campaignId) {
-      resendTags.push({ name: "campaign_id", value: String(campaignId) });
-    }
-    if (organizationId) {
-      resendTags.push({ name: "organization_id", value: String(organizationId) });
-    }
-    if (resendTags.length > 0) {
-      payload.tags = resendTags;
-    }
 
     if (scheduledAt) {
       payload.scheduled_at = scheduledAt;
@@ -121,8 +124,6 @@ serve(async (req: Request) => {
       payload.attachments = attachments.map((att: any) => ({
         filename: att.filename.replace(/[^a-zA-Z0-9.-]/g, '_'),
         content: att.content,
-        content_id: att.content_id,
-        disposition: 'inline',
       }));
     }
 

@@ -280,7 +280,7 @@ const CampaignForm: React.FC = () => {
     }
   };
 
-  const sendEmail = async (currentCampaignId: string, forceImmediate = false) => {
+  const sendEmail = async (currentCampaignId: string, forceImmediate = false, mediaUrls: string[] = []) => {
     let recipients: string[] = [];
     let combinedClients: ClientRecord[] = [];
     if (selectedGroupId) combinedClients = [...combinedClients, ...await getClientsFromGroup(selectedGroupId)];
@@ -303,12 +303,6 @@ const CampaignForm: React.FC = () => {
         scheduledAtISO = dateObj.toISOString();
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const attachments: any[] = [];
-      for (let i = 0; i < files.length; i++) {
-        attachments.push({ filename: files[i].name, content: await fileToBase64(files[i]), content_id: `new-${Date.now()}-${i}` });
-      }
-
       const ctaUrl = (content || '').match(/https?:\/\/[^\s<]+/i)?.[0] || null;
       const linkifiedContent = (content || '')
         .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color:#2563eb;text-decoration:underline;">$1</a>')
@@ -317,7 +311,10 @@ const CampaignForm: React.FC = () => {
       const ctaButtonHtml = ctaUrl
         ? `<div style="margin:28px 0 20px;text-align:center;"><a href="${ctaUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:12px 20px;background:#2563eb;color:#fff;text-decoration:none;border-radius:10px;font-weight:600;">${ctaLabel}</a></div>`
         : '';
-      const emailHtml = `<div style="font-family:sans-serif;color:#333;max-width:600px;margin:0 auto;">${title ? `<h2 style="color:#111;margin-bottom:12px;">${title}</h2>` : ''}<p style="line-height:1.7;margin-bottom:24px;">${linkifiedContent}</p>${ctaButtonHtml}<hr style="border:none;border-top:1px solid #eee;margin:24px 0;"/><p style="font-size:12px;color:#aaa;">Sent via Marketing VHP Campaign Manager</p></div>`;
+      const mediaImagesHtml = mediaUrls.length > 0
+        ? mediaUrls.map(url => `<div style="margin:16px 0;"><img src="${url}" alt="Campaign Image" style="max-width:100%;border-radius:8px;display:block;" /></div>`).join('')
+        : '';
+      const emailHtml = `<div style="font-family:sans-serif;color:#333;max-width:600px;margin:0 auto;">${title ? `<h2 style="color:#111;margin-bottom:12px;">${title}</h2>` : ''}${mediaImagesHtml}<p style="line-height:1.7;margin-bottom:24px;">${linkifiedContent}</p>${ctaButtonHtml}<hr style="border:none;border-top:1px solid #eee;margin:24px 0;"/><p style="font-size:12px;color:#aaa;">Sent via Markivo Campaign Manager</p></div>`;
 
       for (const email of recipients) {
         const payload = {
@@ -325,7 +322,6 @@ const CampaignForm: React.FC = () => {
           subject: emailConfig.subject || title || 'New Campaign',
           html: emailHtml,
           scheduledAt: scheduledAtISO,
-          attachments,
           organizationId: currentOrgId,
           campaignId: currentCampaignId,
         };
@@ -416,7 +412,7 @@ const CampaignForm: React.FC = () => {
       const isSocialSelected = selectedPlatforms.some(p => ['facebook', 'instagram'].includes(p));
       if (isSocialSelected) await scheduleSocialPost(finalMediaList, currentCampaignId);
 
-      if (selectedPlatforms.includes('email')) await sendEmail(currentCampaignId, action === 'immediate');
+      if (selectedPlatforms.includes('email')) await sendEmail(currentCampaignId, action === 'immediate', finalMediaList);
 
       if (action === 'schedule' && selectedPlatforms.includes('email') && scheduledDate) {
         if (new Date(scheduledDate).getTime() <= Date.now() + 60_000) {
