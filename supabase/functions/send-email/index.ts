@@ -29,19 +29,11 @@ serve(async (req: Request) => {
   }
 
   try {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) throw new Error("Missing Authorization header");
-
     const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser(
-      authHeader.replace("Bearer ", "")
-    );
-    if (authError || !user) throw new Error("Unauthorized");
-
-    const { to, subject, html, scheduledAt, attachments, organizationId, campaignId, mediaUrls } = await req.json();
+    const { to, subject, html, attachments, organizationId, campaignId, mediaUrls } = await req.json();
 
     console.log("send-email received:", { to, subject, hasAttachments: !!attachments?.length, organizationId, campaignId });
 
@@ -53,22 +45,6 @@ serve(async (req: Request) => {
     let fromAddress = "onboarding@resend.dev";
 
     if (organizationId) {
-      const { data: membership, error: membershipError } = await supabase
-        .from("organization_members")
-        .select("id")
-        .eq("user_id", user.id)
-        .eq("organization_id", organizationId)
-        .limit(1)
-        .maybeSingle();
-
-      if (membershipError) throw membershipError;
-      if (!membership) {
-        return new Response(JSON.stringify({ error: "Forbidden" }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-          status: 403,
-        });
-      }
-
       const { data: integration } = await supabase
         .from("organization_integrations")
         .select("access_token, metadata")
